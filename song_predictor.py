@@ -2,102 +2,86 @@ import time
 import os
 import re
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup as soup
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
+import sys
+from pyfiglet import Figlet
+from tqdm import tqdm
+import numpy as np
+from bow import bag_of_words
+from soup_scraper import grab_artist_lyrics
+from naive_bayes import train_my_nb
 
 
-base_url = 'http://www.metrolyrics.com/'
+def render_welcome(banner):
+    print(banner.renderText('SCRAPE'))
+    print(banner.renderText('and predict'))
+    print(banner.renderText('SONG LYRICS'))
+    time.sleep(1)
+    print("-------------------v1.0 - Author - lyonne19---------------------")
+    print()
+    for i in range(2):
+        time.sleep(0.5)
+    print(" This app will scrape songs for as many artists as you like!")
+    print("------------------------------------------------------------")
+    time.sleep(1)
+    print(" Then train a Naive Bayes model to recognise their lyrics!")
+    print("------------------------------------------------------------")
+    time.sleep(1)
+    print(" Then you can test how well it has learnt the artists' lyrics!")
+    print("------------------------------------------------------------")
+    time.sleep(1)
+    print()
 
-def grab_artist_lyrics(x):
-    artist_names = []
-    for each in x:
-        artist = each.lower().strip().split(' ')
-        artist_path = '-'.join(artist) + '-lyrics.html'
-        artist_name = '_'.join(artist)
-        artist_names.append(artist_name)
-        path = base_url + artist_path
-        all_songs = requests.get(path)
-        all_songs_bs4 = soup(all_songs.text, 'html.parser')
-        results = all_songs_bs4.find_all(attrs = {'class':'songs-table compact'})[0]
-        songs = results.find_all('a')
-        artist_urls = []
-        for i in range(10):
-            artist_urls.append(songs[i].get('href'))
-        regex = r'http:\/\/www\.metrolyrics\.com\/(\S+)'
-        song_names = []
-        for each in artist_urls:
-            song = re.findall(regex, each)[0]
-            song = song.split('-')
-            artist_size = len(artist) + 1
-            song = song[:-artist_size]
-            song = '_'.join(song)
-            song = artist_name + '_' + song
-            song_names.append(song)
-        for i in range(len(artist_urls)):
-            song = requests.get(artist_urls[i])
-            song1 = soup(song.text, 'html.parser')
-            song_lyrics = song1.find_all(attrs={'class':'js-lyric-text'})[0]
-            s2= song_lyrics.find_all('p')
-            lyrics = ''
-            for each in s2:
-                lyrics += each.text
-            clean_lyrics = re.sub('[\n\-\?\.\,\(\)]', ' ', lyrics)
-            clean_lyrics = re.sub('[\']', '', clean_lyrics)
-            file = '/home/tommu/code/spiced/scrape_nlp/' + song_names[i] + '.txt'
-            with open(file,'w') as f:
-                f.write(clean_lyrics)
-    print('-----------------------')
-    print('All files saved to disk')
-    print('-----------------------')
+def input_artists():
+    all_artists = []
+    i = True
+    while i:
+        artist = input("\n Input:\n Please enter an artist's name, or type 'done' to finish:\n\n ")
+        if artist.strip().lower() == 'done':
+            print(banner.renderText('DONE'))
+            i = False
+        else:
+            all_artists.append(artist)
+            print(f"\n {artist} added!")
     time.sleep(0.5)
-    return artist_names
+    return all_artists
 
-def bag_of_words(y):
-    all_lyrics = []
-    artist_name = []
-    path = '/home/tommu/code/spiced/scrape_nlp/'
-    for artist in y:
-        for file in os.listdir(path):
-            if artist in file and '.txt' in file:
-                with open(path + file, 'r') as f:
-                    all_lyrics.append(f.read())
-
-        artist = [artist] * 10
-        artist_name += artist
-    artist_name = pd.factorize(artist_name)[0]
-    tv = TfidfVectorizer()
-    vec_lyrics = tv.fit_transform(all_lyrics)
-    print('Song lyrics vectorised')
-    print('-----------------------')
-    time.sleep(0.5)
-    return vec_lyrics, artist_name, tv
-
-def train_my_nb(x,y):
-    m = MultinomialNB()
-    m.fit(x,y)
-    print('Model is trained')
-    print('-----------------------')
-    time.sleep(0.5)
-    return m
+def guess_artist(guess, tv, model):
+    clean_guess = re.sub('[\n\-\?\.\,\(\)]', ' ', guess)
+    clean_guess = re.sub('[\']', '', clean_guess)
+    clean_guess = [clean_guess]
+    vec_guess = tv.transform(clean_guess)
+    prediction = model.predict_proba(vec_guess)
+    return prediction
 
 
 
 if __name__ == '__main__':
-    all_artists = []
-    all_artists.append(input('input artist no.1:\n'))
-    time.sleep(0.5)
-    all_artists.append(input('input artist no.2:\n'))
+    banner = Figlet(font='slant')
+    render_welcome(banner)
+    all_artists = input_artists()
     clean_artists = grab_artist_lyrics(all_artists)
+    print()
+    print("------------------------------------------------------------")
+    print('All files saved to disk')
+    print()
     lyrics, names, tv = bag_of_words(clean_artists)
+    print("------------------------------------------------------------")
+    print('Song lyrics vectorised')
+    print()
     time.sleep(0.5)
     model = train_my_nb(lyrics,names)
-    time.sleep(0.5)
-    guess = input('Now paste in a song lyric from one of the artists:\n')
-    clean_guess = re.sub('[\n\-\?\.\,\(\)]', ' ', guess)
-    clean_guess = re.sub('[\']', '', clean_guess)
-    vec_guess = tv.transform([clean_guess])
-    prediction = model.predict_proba(vec_guess)
+    print('Model is trained')
+    print("------------------------------------------------------------")
+    print()
+    time.sleep(1)
+    guess = input(f'\n Now paste in a song lyric from one of your artists:\n ')
+    prediction = guess_artist(guess, tv, model)
+    print("------------------------------------------------------------")
+    print('This looks like a song from:')
+    time.sleep(1)
+    print(banner.renderText(clean_artists[prediction.argmax()]))
     df = pd.DataFrame(prediction.round(2), columns = all_artists)
+    time.sleep(1)
+    print("------------------------------------------------------------")
+    print('And the certainty of the guess is:')
     print(df)
