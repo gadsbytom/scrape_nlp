@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/lyonne19/scrape_nlp.svg?branch=master)](https://travis-ci.com/lyonne19/scrape_nlp)
+
 ## Scrape and Predict Song Lyrics:
 ---
 ### Description:
