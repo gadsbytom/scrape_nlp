@@ -6,9 +6,8 @@ import requests
 from tqdm import tqdm
 from bs4 import BeautifulSoup as soup
 
-base_url = 'http://www.metrolyrics.com/'
-
 def grab_artist_lyrics(x):
+    base_url = 'http://www.metrolyrics.com/'
     artist_names = []
     for each in x:
         artist = each.lower().strip().split(' ')
@@ -33,7 +32,8 @@ def grab_artist_lyrics(x):
             song = '_'.join(song)
             song = artist_name + '_' + song
             song_names.append(song)
-        for i in tqdm(range(5), ascii=True, desc=f"saving {artist_name}'s files"):
+            print(artist_urls)
+        for i in tqdm(len(songs), ascii=True, desc=f"saving {artist_name}'s files"):
             song = requests.get(artist_urls[i])
             song1 = soup(song.text, 'html.parser')
             song_lyrics = song1.find_all(attrs={'class':'js-lyric-text'})[0]
@@ -41,9 +41,9 @@ def grab_artist_lyrics(x):
             lyrics = ''
             for each in s2:
                 lyrics += each.text
-            clean_lyrics = re.sub('[\n\-\?\.\,\(\)]', ' ', lyrics)
-            clean_lyrics = re.sub('[\']', '', clean_lyrics)
-            file = '/home/tommu/code/spiced/scrape_nlp/' + song_names[i] + '.txt'
+            clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)]', ' ', lyrics)
+            clean_lyrics = re.sub(r'[\']', '', clean_lyrics)
+            file = './' + song_names[i] + '.txt'
             with open(file,'w') as f:
                 f.write(lyrics)
     return artist_names

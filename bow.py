@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 def bag_of_words(y):
     all_lyrics = []
     artist_name = []
-    path = '/home/tommu/code/spiced/scrape_nlp/'
+    path = './'
     for artist in y:
         for file in os.listdir(path):
             if artist in file and '.txt' in file:

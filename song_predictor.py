@@ -12,9 +12,7 @@ from naive_bayes import train_my_nb
 
 
 def render_welcome(banner):
-    print(banner.renderText('SCRAPE'))
-    print(banner.renderText('and predict'))
-    print(banner.renderText('SONG LYRICS'))
+    print(banner.renderText('GUESS THE LYRICS!!'))
     time.sleep(1)
     print("-------------------v1.0 - Author - lyonne19---------------------")
     print()
@@ -37,7 +35,6 @@ def input_artists():
     while i:
         artist = input("\n Input:\n Please enter an artist's name, or type 'done' to finish:\n\n ")
         if artist.strip().lower() == 'done':
-            print(banner.renderText('DONE'))
             i = False
         else:
             all_artists.append(artist)
@@ -59,6 +56,7 @@ if __name__ == '__main__':
     banner = Figlet(font='slant')
     render_welcome(banner)
     all_artists = input_artists()
+    print(all_artists)
     clean_artists = grab_artist_lyrics(all_artists)
     print()
     print("------------------------------------------------------------")
@@ -70,18 +68,28 @@ if __name__ == '__main__':
     print()
     time.sleep(0.5)
     model = train_my_nb(lyrics,names)
-    print('Model is trained')
     print("------------------------------------------------------------")
+    print('Model is trained')
     print()
     time.sleep(1)
-    guess = input(f'\n Now paste in a song lyric from one of your artists:\n ')
-    prediction = guess_artist(guess, tv, model)
-    print("------------------------------------------------------------")
-    print('This looks like a song from:')
-    time.sleep(1)
-    print(banner.renderText(clean_artists[prediction.argmax()]))
-    df = pd.DataFrame(prediction.round(2), columns = all_artists)
-    time.sleep(1)
-    print("------------------------------------------------------------")
-    print('And the certainty of the guess is:')
-    print(df)
+    guess_loop = True
+    while guess_loop:
+        guess = input(f'\n Now paste in a song lyric from one of your artists, or type 'finish' to finish::\n ")
+        prediction = guess_artist(guess, tv, model)
+        print("------------------------------------------------------------")
+        print('This looks like a song from:')
+        time.sleep(1)
+        print(banner.renderText(clean_artists[prediction.argmax()]))
+        df = pd.DataFrame(prediction.round(2), columns = all_artists)
+        time.sleep(1)
+        print("------------------------------------------------------------")
+        print('And the certainty of the guess is:')
+        print(df)
+
+        artist = input("\n Input:\n Please enter an artist's name, or type 'done' to finish:\n\n ")
+        if artist.strip().lower() == 'done':
+            i = False
+        else:
+            all_artists.append(artist)
+            print(f"\n {artist} added!")
+    time.sleep(0.5)
