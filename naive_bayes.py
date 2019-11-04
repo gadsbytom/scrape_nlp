@@ -1,3 +1,5 @@
+"""This file carries out the naive bayes prediction"""
+
 import time
 from sklearn.naive_bayes import MultinomialNB
 

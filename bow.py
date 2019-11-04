@@ -1,3 +1,5 @@
+"""This file converts strings to BOW vectors"""
+
 import time
 import os
 import pandas as pd

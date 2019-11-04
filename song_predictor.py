@@ -1,3 +1,6 @@
+"""This is the primary file for handling new song inputs"""
+
+
 import time
 import os
 import re

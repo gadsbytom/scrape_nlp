@@ -1,3 +1,5 @@
+"""This file scrapes lyrics using BS4"""
+
 import time
 import os
 import re
