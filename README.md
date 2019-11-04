@@ -3,9 +3,9 @@
 ## Scrape and Predict Song Lyrics:
 ---
 ### Description:
-#### This is a web scraping and NLP project built in Python. The purpose of the code is three-fold:
+#### This is a web scraping and NLP project built in Python 3.7. The purpose of the code is three-fold:
 
-* For a given list of artists, scrape the lyrics from their songs from the internet.
+* For a given list of artists, scrape the lyrics from their songs from the internet using Beautiful soup.
 
 * Vectorize their songs using a TfidfVectorizer Bag Of Words model, then train a Naive Bayes classifier on this labelled vector set.
 
