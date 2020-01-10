@@ -18,7 +18,6 @@ def render_welcome(banner):
     print(banner.renderText('GUESS THE LYRICS!!'))
     time.sleep(1)
     print("-------------------v1.0 - Author - lyonne19---------------------")
-    print("--------------------------MIT LICENSE---------------------------")
     print()
     for i in range(2):
         time.sleep(0.5)
