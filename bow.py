@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def bag_of_words(y):
+    """convert all items to bag of words"""
     all_lyrics = []
     artist_name = []
     path = './'
