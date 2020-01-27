@@ -12,11 +12,15 @@ def grab_artist_lyrics(x):
     base_url = 'http://www.metrolyrics.com/'
     artist_names = []
     for each in x:
+        print(each)
+        time.sleep(1)
         artist = each.lower().strip().split(' ')
         artist_path = '-'.join(artist) + '-lyrics.html'
         artist_name = '_'.join(artist)
         artist_names.append(artist_name)
         path = base_url + artist_path
+        print(path)
+        time.sleep(1)
         all_songs = requests.get(path)
         all_songs_bs4 = soup(all_songs.text, 'html.parser')
         results = all_songs_bs4.find_all(attrs = {'class':'songs-table compact'})[0]
@@ -26,6 +30,7 @@ def grab_artist_lyrics(x):
             artist_urls.append(songs[i].get('href'))
         regex = r'https:\/\/www\.metrolyrics\.com\/(\S+)'
         song_names = []
+        #print(artist_urls)
         for each in artist_urls:
             song = re.findall(regex, each)[0]
             song = song.split('-')
@@ -34,8 +39,9 @@ def grab_artist_lyrics(x):
             song = '_'.join(song)
             song = artist_name + '_' + song
             song_names.append(song)
-            print(artist_urls)
-        for i in tqdm(len(songs), ascii=True, desc=f"saving {artist_name}'s files"):
+            #print(artist_urls)
+        #for i in tqdm(len(songs), ascii=True, desc=f"saving {artist_name}'s files"):
+        for i in range(len(songs)):
             song = requests.get(artist_urls[i])
             song1 = soup(song.text, 'html.parser')
             song_lyrics = song1.find_all(attrs={'class':'js-lyric-text'})[0]
