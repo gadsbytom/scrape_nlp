@@ -8,18 +8,22 @@ import requests
 from tqdm import tqdm
 from bs4 import BeautifulSoup as soup
 
+
 def grab_artist_lyrics(x):
+    """accepts a list of artists, scrapes one page of songs, saves to disk and returns artists names"""
+    print('\n OK, the program is scraping lyrics data')
+    if not os.path.exists('songs'):
+        os.makedirs('songs')
+
     base_url = 'http://www.metrolyrics.com/'
     artist_names = []
     for each in x:
-        print(each)
         time.sleep(1)
         artist = each.lower().strip().split(' ')
         artist_path = '-'.join(artist) + '-lyrics.html'
         artist_name = '_'.join(artist)
         artist_names.append(artist_name)
         path = base_url + artist_path
-        print(path)
         time.sleep(1)
         all_songs = requests.get(path)
         all_songs_bs4 = soup(all_songs.text, 'html.parser')
@@ -30,7 +34,7 @@ def grab_artist_lyrics(x):
             artist_urls.append(songs[i].get('href'))
         regex = r'https:\/\/www\.metrolyrics\.com\/(\S+)'
         song_names = []
-        #print(artist_urls)
+
         for each in artist_urls:
             song = re.findall(regex, each)[0]
             song = song.split('-')
@@ -39,9 +43,7 @@ def grab_artist_lyrics(x):
             song = '_'.join(song)
             song = artist_name + '_' + song
             song_names.append(song)
-            #print(artist_urls)
-        #for i in tqdm(len(songs), ascii=True, desc=f"saving {artist_name}'s files"):
-        for i in range(len(songs)):
+        for i in tqdm(range(len(songs)), ascii=True, desc=f"saving {artist_name}'s files"):
             song = requests.get(artist_urls[i])
             song1 = soup(song.text, 'html.parser')
             song_lyrics = song1.find_all(attrs={'class':'js-lyric-text'})[0]
@@ -51,7 +53,9 @@ def grab_artist_lyrics(x):
                 lyrics += each.text
             clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)]', ' ', lyrics)
             clean_lyrics = re.sub(r'[\']', '', clean_lyrics)
-            file = './' + song_names[i] + '.txt'
+            file = './songs/' + song_names[i] + '.txt'
             with open(file,'w') as f:
                 f.write(lyrics)
+    print("\n ------------------------------------------------------------")
+    print(' All files are now saved in the songs folder')
     return artist_names
