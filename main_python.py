@@ -9,9 +9,9 @@ import sys
 from pyfiglet import Figlet
 from tqdm import tqdm
 import numpy as np
-from bow import bag_of_words
-from soup_scraper import grab_artist_lyrics
-from naive_bayes import train_my_nb
+from scrape_songs_with_bs4 import grab_artist_lyrics
+from vectorize_songs_with_tfidf import bag_of_words
+from train_naive_bayes import train_my_nb
 
 
 def render_welcome(banner):
@@ -53,7 +53,7 @@ def guess_artist(guess, tv, model):
 if __name__ == '__main__':
     #introductory visuals
     banner = Figlet(font='slant')
-    #render_welcome(banner)
+    render_welcome(banner)
 
     #scrape all intputted artists and train the model
     all_artists = input_artists()
