@@ -62,7 +62,7 @@ if __name__ == '__main__':
     model = train_my_nb(lyrics,names)
 
     #guess  the artist from unseen text
-    guess = input(f"\n Now paste in a song lyric from one of your artists to see if the model works:\n ")
+    guess = input(f"\n Now paste in a song lyric from one of your artists to see if the model works:\n\n ")
     prediction = guess_artist(guess, tv, model)
     print(banner.renderText(clean_artists[prediction.argmax()]))
     df = pd.DataFrame(prediction.round(2), columns = all_artists)
