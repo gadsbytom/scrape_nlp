@@ -57,5 +57,5 @@ def grab_artist_lyrics(x):
             with open(file,'w') as f:
                 f.write(lyrics)
     print("\n ------------------------------------------------------------")
-    print(' All files are now saved in the songs folder')
+    print("All files are now saved in the folder named '/songs'")
     return artist_names
