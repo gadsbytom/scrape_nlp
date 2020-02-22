@@ -1,6 +1,5 @@
 import requests
-from soup_scraper import grab_artist_lyrics
-import tqdm
+from scrape_songs_with_bs4 import grab_artist_lyrics
 
 
 def test_base_connection_valid():
