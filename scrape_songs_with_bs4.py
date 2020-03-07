@@ -1,3 +1,7 @@
+"""select how many songs to scrape at a time
+catch incorrect artist inputs
+allow the user to input more than a sing """
+
 """This file scrapes lyrics using BS4"""
 
 import time
@@ -9,53 +13,83 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup as soup
 
 
-def grab_artist_lyrics(x):
+def compile_artists():
+    """user inputs all artists to be scraped, returns those artists"""
+
+    base_url = 'http://www.metrolyrics.com/'
+    artist_main_page_url = []
+    artist_names = []
+
+    #collect artist names, check they have a url, and stop when 'done' is entered
+
+    i = True
+    while i:
+        new_artist = input("\n Input:\n Please enter an artist's name, or type 'done' to finish:\n\n ")
+        if new_artist.strip().lower() == 'done':
+            i = False
+        else:
+            artist = new_artist.lower().strip().split(' ')
+            artist_name = '-'.join(artist)
+            artist_path = artist_name + '-lyrics.html'
+            path = base_url + artist_path
+            all_songs = requests.get(path)
+            if all_songs:
+                artist_names.append(artist_name)
+                artist_main_page_url.append(all_songs)
+                print(f"\n {new_artist} added!")
+            else:
+                print(f"-------------------------------------------------------------------")
+                print(f"\n Oops! We can't find {new_artist}. Please try a different choice.")
+                print(f"-------------------------------------------------------------------")
+    time.sleep(0.5)
+    return artist_main_page_url, artist_names
+
+
+def grab_artist_lyrics(artist_links, artist_names):
     """accepts a list of artists, scrapes one page of songs, saves to disk and returns artists names"""
-    print('\n OK, the program is scraping lyrics data')
+
+
+    print('\n OK, the program is scraping lyrics data\n ')
     if not os.path.exists('songs'):
         os.makedirs('songs')
 
-    base_url = 'http://www.metrolyrics.com/'
-    artist_names = []
-    for each in x:
-        time.sleep(1)
-        artist = each.lower().strip().split(' ')
-        artist_path = '-'.join(artist) + '-lyrics.html'
-        artist_name = '_'.join(artist)
-        artist_names.append(artist_name)
-        path = base_url + artist_path
-        time.sleep(1)
-        all_songs = requests.get(path)
-        all_songs_bs4 = soup(all_songs.text, 'html.parser')
-        results = all_songs_bs4.find_all(attrs = {'class':'songs-table compact'})[0]
-        songs = results.find_all('a')
-        artist_urls = []
-        for i in range(len(songs)):
-            artist_urls.append(songs[i].get('href'))
+    #loop over each inputted artist, make a directory, and generate song names and song url lists
+    for i, artist_link in enumerate(artist_links):
+        if not os.path.exists(f'songs/{artist_names[i]}'):
+            os.makedirs(f'songs/{artist_names[i]}')
+        base_url = 'http://www.metrolyrics.com/'
         regex = r'https:\/\/www\.metrolyrics\.com\/(\S+)'
+        song_urls = []
         song_names = []
+        all_songs_bs4 = soup(artist_link.text, 'html.parser')
+        results = all_songs_bs4.find_all(attrs = {'class':'songs-table compact'})[0]
+        song_links = results.find_all('a')
 
-        for each in artist_urls:
-            song = re.findall(regex, each)[0]
-            song = song.split('-')
-            artist_size = len(artist) + 1
-            song = song[:-artist_size]
-            song = '_'.join(song)
-            song = artist_name + '_' + song
-            song_names.append(song)
-        for i in tqdm(range(len(songs)), ascii=True, desc=f"saving {artist_name}'s files"):
-            song = requests.get(artist_urls[i])
-            song1 = soup(song.text, 'html.parser')
-            song_lyrics = song1.find_all(attrs={'class':'js-lyric-text'})[0]
+        for j, link in enumerate(song_links):
+            song_url = link.get('href')
+            song_urls.append(song_url)
+
+            song_name = re.findall(regex, song_url)[0]
+            song_name = song_name.split('-')
+            song_name = '_'.join(song_name)
+            song_name = song_name[:-5]
+            song_names.append(song_name)
+
+        #for each song url, pull out all the text and save it in a txt file
+        for k in tqdm(range(len(song_urls)), ascii=True, desc=f"saving {artist_names[i]}'s files"):
+            page = requests.get(song_urls[k])
+            song = soup(page.text, 'html.parser')
+            song_lyrics = song.find_all(attrs={'class':'js-lyric-text'})[0]
             s2= song_lyrics.find_all('p')
             lyrics = ''
             for each in s2:
                 lyrics += each.text
             clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)]', ' ', lyrics)
-            clean_lyrics = re.sub(r'[\']', '', clean_lyrics)
-            file = './songs/' + song_names[i] + '.txt'
+            clean_lyrics = re.sub(r'[\']', ' ', clean_lyrics)
+            file = f'./songs/{artist_names[i]}' + '/' + song_names[k] + '.txt'
             with open(file,'w') as f:
-                f.write(lyrics)
+                f.write(clean_lyrics)
+
     print("\n ------------------------------------------------------------")
-    print("All files are now saved in the folder named '/songs'")
+    print(" All files are now saved in the folder named '/songs'")
     return artist_names

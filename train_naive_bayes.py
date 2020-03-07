@@ -10,4 +10,5 @@ def train_my_nb(x,y):
     time.sleep(1)
     print("\n ------------------------------------------------------------")
     print(' Model is trained')
+    time.sleep(1)
     return m

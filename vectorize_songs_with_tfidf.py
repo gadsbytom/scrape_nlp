@@ -6,12 +6,12 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-def bag_of_words(y):
+def bag_of_words(x):
     """convert all items to bag of words"""
     all_lyrics = []
     artist_name = []
     path = './songs/'
-    for artist in y:
+    for artist in x:
         for file in os.listdir(path):
             if artist in file and '.txt' in file:
                 with open(path + file, 'r') as f:
