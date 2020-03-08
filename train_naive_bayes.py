@@ -3,10 +3,10 @@
 import time
 from sklearn.naive_bayes import MultinomialNB
 
-def train_my_nb(x,y):
+def train_my_nb(X,y):
     """update the Naive Bayes model"""
     m = MultinomialNB()
-    m.fit(x,y)
+    m.fit(X,y)
     time.sleep(1)
     print("\n ------------------------------------------------------------")
     print(' Model is trained')

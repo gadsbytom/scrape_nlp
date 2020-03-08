@@ -40,7 +40,7 @@ def guess_artist(guess, tv, model):
 if __name__ == '__main__':
     #introductory visuals
     banner = Figlet()
-    #render_welcome(banner)
+    render_welcome(banner)
 
     #scrape all intputted artists and train the model
     artist_links, artist_names = compile_artists()
@@ -52,8 +52,3 @@ if __name__ == '__main__':
     guess = input(f"\n Now paste in a song lyric from one of your artists to see if the model works:\n\n ")
     prediction = guess_artist(guess, tv, model)
     print(banner.renderText(clean_artists[prediction.argmax()]))
-    df = pd.DataFrame(prediction.round(2), columns = artist_names)
-    time.sleep(1)
-    print("\n ------------------------------------------------------------")
-    print(' And the certainty of the guess is:\n')
-    print(df)

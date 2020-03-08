@@ -12,9 +12,10 @@ def bag_of_words(x):
     artist_name = []
     path = './songs/'
     for artist in x:
-        for file in os.listdir(path):
+        folder = os.path.join(path,artist, '')
+        for file in os.listdir(folder):
             if artist in file and '.txt' in file:
-                with open(path + file, 'r') as f:
+                with open(folder + file, 'r') as f:
                     all_lyrics.append(f.read())
                     artist_name.append(artist)
 
