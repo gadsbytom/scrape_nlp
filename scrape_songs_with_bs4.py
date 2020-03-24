@@ -38,8 +38,7 @@ def compile_artists():
                 artist_main_page_url.append(all_songs)
                 print(f"\n {new_artist} added!")
             else:
-                print(f"-------------------------------------------------------------------")
-                print(f"\n Oops! We can't find {new_artist}. Please try a different choice.")
+                print(f"\n Oops! We can't find '{new_artist}'. Please try a different choice.")
                 print(f"-------------------------------------------------------------------")
     time.sleep(0.5)
     return artist_main_page_url, artist_names
@@ -84,8 +83,7 @@ def grab_artist_lyrics(artist_links, artist_names):
             lyrics = ''
             for each in s2:
                 lyrics += each.text
-            clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)]', ' ', lyrics)
-            clean_lyrics = re.sub(r'[\']', ' ', clean_lyrics)
+            clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)] | [\']', ' ', lyrics)
             file = f'./songs/{artist_names[i]}' + '/' + song_names[k] + '.txt'
             with open(file,'w') as f:
                 f.write(clean_lyrics)
