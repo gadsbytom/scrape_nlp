@@ -38,7 +38,7 @@ def compile_artists():
                 artist_main_page_url.append(all_songs)
                 print(f"\n {new_artist} added!")
             else:
-                print(f"\n Oops! We can't find '{new_artist}'. Please try a different choice.")
+                print(f"\n We can't find '{new_artist}'. Please try a different choice.")
                 print(f"-------------------------------------------------------------------")
     time.sleep(0.5)
     return artist_main_page_url, artist_names

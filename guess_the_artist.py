@@ -13,7 +13,6 @@ from scrape_songs_with_bs4 import compile_artists, grab_artist_lyrics
 from vectorize_songs_with_tfidf import bag_of_words
 from train_naive_bayes import train_my_nb
 
-
 def render_welcome(banner):
     """CLI visuals for the start of the program"""
     print(banner.renderText('GUESS THE ARTIST!!\n'))
