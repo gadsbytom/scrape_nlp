@@ -15,7 +15,7 @@ def save_word_cloud(text, folder, artist):
     plt.axis("off")
     plt.savefig(f'{folder}{artist}_wordcloud.png')
 
-def bag_of_words(x):
+def tfidf(x):
     """convert all items to bag of words"""
     all_lyrics = []
     artist_name = []
@@ -27,7 +27,8 @@ def bag_of_words(x):
                 with open(folder + file, 'r') as f:
                     all_lyrics.append(f.read())
                     artist_name.append(artist)
-        save_word_cloud(all_lyrics, folder, artist)
+        if all_lyrics:
+            save_word_cloud(all_lyrics, folder, artist)
     artist_name = pd.factorize(artist_name)[0]
     tv = TfidfVectorizer()
     vec_lyrics = tv.fit_transform(all_lyrics)

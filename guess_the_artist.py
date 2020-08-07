@@ -10,7 +10,7 @@ from pyfiglet import Figlet
 from tqdm import tqdm
 import numpy as np
 from scrape_songs_with_bs4 import compile_artists, grab_artist_lyrics
-from vectorize_songs_with_tfidf import bag_of_words
+from vectorize_songs_with_tfidf import tfidf
 from train_naive_bayes import train_my_nb
 
 def render_welcome(banner):
@@ -39,12 +39,12 @@ def guess_artist(guess, tv, model):
 if __name__ == '__main__':
     #introductory visuals
     banner = Figlet()
-    render_welcome(banner)
+    #render_welcome(banner)
 
     #scrape all intputted artists and train the model
-    artist_links, artist_names = compile_artists()
-    clean_artists = grab_artist_lyrics(artist_links, artist_names)
-    lyrics, names, tv = bag_of_words(clean_artists)
+    artist_links, artist_names = compile_artists(banner)
+    clean_artists = grab_artist_lyrics(artist_links, artist_names, banner)
+    lyrics, names, tv = tfidf(clean_artists)
     model = train_my_nb(lyrics,names)
 
     #guess  the artist from unseen text

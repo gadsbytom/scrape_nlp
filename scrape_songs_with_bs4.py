@@ -11,9 +11,10 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 from bs4 import BeautifulSoup as soup
+from pyfiglet import Figlet
 
 
-def compile_artists():
+def compile_artists(banner):
     """user inputs all artists to be scraped, returns those artists"""
 
     base_url = 'http://www.metrolyrics.com/'
@@ -21,10 +22,10 @@ def compile_artists():
     artist_names = []
 
     #collect artist names, check they have a url, and stop when 'done' is entered
-
+    print(banner.renderText('INPUT!!\n'))
     i = True
     while i:
-        new_artist = input("\n Input:\n Please enter an artist's name, or type 'done' to finish:\n\n ")
+        new_artist = input("\nPlease enter an artist's name, or type 'done' to finish:\n\n ")
         if new_artist.strip().lower() == 'done':
             i = False
         else:
@@ -37,18 +38,19 @@ def compile_artists():
                 artist_names.append(artist_name)
                 artist_main_page_url.append(all_songs)
                 print(f"\n {new_artist} added!")
+                print(f"-------------------------------------------------------------------")
             else:
-                print(f"\n We can't find '{new_artist}'. Please try a different choice.")
+                print(f"\n OOPS! We can't find '{new_artist}'. Please try again.")
                 print(f"-------------------------------------------------------------------")
     time.sleep(0.5)
     return artist_main_page_url, artist_names
 
 
-def grab_artist_lyrics(artist_links, artist_names):
+def grab_artist_lyrics(artist_links, artist_names, banner):
     """accepts a list of artists, scrapes one page of songs, saves to disk and returns artists names"""
 
-
-    print('\n OK, the program is scraping lyrics data\n ')
+    print(banner.renderText('SCRAPING!!\n'))
+    print('\t---Thanks Metrolyrics---\n')
     if not os.path.exists('songs'):
         os.makedirs('songs')
 
