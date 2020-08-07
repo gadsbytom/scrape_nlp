@@ -5,3 +5,4 @@ wordcloud
 matplotlib
 requests
 bs4
+pyfiglet
