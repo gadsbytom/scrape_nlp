@@ -4,3 +4,4 @@ tqdm
 wordcloud
 matplotlib
 requests
+bs4
