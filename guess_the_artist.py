@@ -39,7 +39,7 @@ def guess_artist(guess, tv, model):
 if __name__ == '__main__':
     #introductory visuals
     banner = Figlet()
-    #render_welcome(banner)
+    render_welcome(banner)
 
     #scrape all intputted artists and train the model
     artist_links, artist_names = compile_artists(banner)
