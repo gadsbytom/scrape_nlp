@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/tomgadsby/scrape_nlp.svg?branch=master)](https://travis-ci.com/tomgadsby/scrape_nlp)
+[![Build Status](https://travis-ci.com/gadsbytom/scrape_nlp.svg?token=Tpiw6Pgr2hkqhx56K1bL&branch=master)](https://travis-ci.com/gadsbytom/scrape_nlp)
 
 ## Scrape and Predict Song Lyrics:
 ---
