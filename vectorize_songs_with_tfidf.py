@@ -10,10 +10,13 @@ import matplotlib.pyplot as plt
 
 def save_word_cloud(text, folder, artist):
     text = ' '.join(text)
-    wordcloud = WordCloud().generate(text)
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    plt.savefig(f'{folder}{artist}_wordcloud.png')
+    if len(text)>0:
+        wordcloud = WordCloud().generate(text)
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        if not os.path.exists(os.path.join(folder,'wordcloud')):
+            os.makedirs(os.path.join(folder,'wordcloud'))
+        plt.savefig(os.path.join(folder,'wordcloud', f'{artist}_wordcloud.png'))
 
 def tfidf(x):
     """convert all items to bag of words"""

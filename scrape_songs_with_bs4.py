@@ -78,17 +78,20 @@ def grab_artist_lyrics(artist_links, artist_names, banner):
 
         #for each song url, pull out all the text and save it in a txt file
         for k in tqdm(range(len(song_urls)), ascii=True, desc=f"saving {artist_names[i]}'s files"):
-            page = requests.get(song_urls[k])
-            song = soup(page.text, 'html.parser')
-            song_lyrics = song.find_all(attrs={'class':'js-lyric-text'})[0]
-            s2= song_lyrics.find_all('p')
-            lyrics = ''
-            for each in s2:
-                lyrics += each.text
-            clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)] | [\']', ' ', lyrics)
-            file = f'./songs/{artist_names[i]}' + '/' + song_names[k] + '.txt'
-            with open(file,'w') as f:
-                f.write(clean_lyrics)
+            try:
+                page = requests.get(song_urls[k])
+                song = soup(page.text, 'html.parser')
+                song_lyrics = song.find_all(attrs={'class':'js-lyric-text'})[0]
+                s2= song_lyrics.find_all('p')
+                lyrics = ''
+                for each in s2:
+                    lyrics += each.text
+                clean_lyrics = re.sub(r'[\n\-\?\.\,\(\)] | [\']', ' ', lyrics)
+                file = f'./songs/{artist_names[i]}' + '/' + song_names[k] + '.txt'
+                with open(file,'w') as f:
+                    f.write(clean_lyrics)
+            except:
+                continue
 
     print("\n ------------------------------------------------------------")
     print(" All files are now saved in the folder named '/songs'")
