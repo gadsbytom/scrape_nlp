@@ -7,3 +7,6 @@ install:
 # command to run tests
 script:
   - pytest tests.py
+# command to run check coverage
+after_success:
+  - codecov 
