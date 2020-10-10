@@ -1,6 +1,5 @@
 """This is the primary file for handling new song inputs"""
 
-
 import time
 import os
 import re
@@ -11,7 +10,8 @@ from tqdm import tqdm
 import numpy as np
 from scrape_songs_with_bs4 import compile_artists, grab_artist_lyrics
 from vectorize_songs_with_tfidf import tfidf
-from train_naive_bayes import train_my_nb
+from train_naive_bayes import train_my_nb, rebalance_my_datasets
+
 
 def render_welcome(banner):
     """CLI visuals for the start of the program"""
@@ -35,16 +35,16 @@ def guess_artist(guess, tv, model):
     print("\n ------------------------------------------------------------")
     print('\n This looks like a song from:')
     return prediction
-
 if __name__ == '__main__':
     #introductory visuals
     banner = Figlet()
-    render_welcome(banner)
+    #render_welcome(banner)
 
     #scrape all intputted artists and train the model
     artist_links, artist_names = compile_artists(banner)
     clean_artists = grab_artist_lyrics(artist_links, artist_names, banner)
     lyrics, names, tv = tfidf(clean_artists)
+    lyrics, names = rebalance_my_datasets(lyrics,names)
     model = train_my_nb(lyrics,names)
 
     #guess  the artist from unseen text
