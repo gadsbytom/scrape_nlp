@@ -13,7 +13,7 @@ def train_my_nb(X,y):
     time.sleep(1)
     print("\n ------------------------------------------------------------")
     print(' Model is trained')
-    time.sleep(1)
+    time.sleep(0.5)
     return m
 
 
