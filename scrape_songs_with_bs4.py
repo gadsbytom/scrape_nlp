@@ -94,5 +94,5 @@ def grab_artist_lyrics(artist_links, artist_names, banner):
                 continue
 
     print("\n ------------------------------------------------------------")
-    print(" All files are now saved in the folder named '/songs'")
+    print("Files are now saved in the folder named '/songs'")
     return artist_names
