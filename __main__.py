@@ -27,8 +27,8 @@ def render_welcome(banner):
 
 def guess_artist(guess, tv, model):
     """accepts unseen text and returns a probability distribution"""
-    clean_guess = re.sub('[\n\-\?\.\,\(\)]', ' ', guess)
-    clean_guess = re.sub('[\']', '', clean_guess)
+    clean_guess = re.sub(r'[\n\-\?\.\,\(\)]', ' ', guess)
+    clean_guess = re.sub(r'[\']', '', clean_guess)
     clean_guess = [clean_guess]
     vec_guess = tv.transform(clean_guess)
     prediction = model.predict_proba(vec_guess)
