@@ -15,7 +15,7 @@ from train_naive_bayes import train_my_nb, rebalance_my_datasets
 
 def render_welcome(banner):
     """CLI visuals for the start of the program"""
-    print(banner.renderText('GUESS THE ARTIST!!\n'))
+    print(banner.renderText('PREDICT THE ARTIST!!\n'))
     time.sleep(1)
     print(" This program will scrape songs for as many artists as you like!\n -----------------------------------------------------------")
     time.sleep(1)

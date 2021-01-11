@@ -20,7 +20,7 @@ def train_my_nb(X,y):
 def rebalance_my_datasets(X,y):
     """bootstrap all minority classes with less than 4 data points up to 6, else SMOTE doesn't work"""
     values, counts = np.unique(y, return_counts=True)
-    small_classes = [x[0] for x in list(zip(values, counts)) if x[1] <=3]
+    small_classes = [x[0] for x in list(zip(values, counts)) if x[1] <4]
     extra_x = [X]
     extra_y = [y]
     for c in small_classes:
