@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/gadsbytom/scrape_nlp.svg?token=Tpiw6Pgr2hkqhx56K1bL&branch=master)](https://travis-ci.com/gadsbytom/scrape_nlp)
-
 ## Scrape and Predict Song Lyrics:
 ---
 ### Description:
@@ -13,23 +11,23 @@
 ---
 ### Resources:
 
-#### __main__.py:
+#### `__main__.py:`
 **This is the main entry point for the code**
 *This file should be run from the terminal. This file will call all the other files in the collection
 **Input: None**
 **Output: An artist prediction and prediction probability distribution**
 
-#### scrape_songs_with_bs4.py:
+#### `scrape_songs_with_bs4.py:`
 *This module scrapes songs from 'www.metrolyrics.com' using beautiful soup, and saves each song to disk in an appropriately named .txt file inside a 'songs' folder*
 **Input: A collection of artists' names**
 **Output: A collection of .txt files saved to disk**
 
-#### vectorize_songs_with_tfidf.py:
+#### `vectorize_songs_with_tfidf.py:`
 *This module takes the files which have been saved to disk and converts them into tfidf vectors, where the term frequency is scaled by the uniqueness of the results*
 **Input: A collection of artists' names**
 **Output: A collection of word vectors, an associated collection of labels, and a trained tfidfvectorizer model**
 
-#### train_naive_bayes.py:
+#### `train_naive_bayes.py:`
 *This module takes in the tfidf vectors and the labels of the associated artist, and returns a trained naive bayes model*
 **Input:  A collection of word vectors, and an associated collection of labels**
 **Output: A prediction probability distribution, with order matching the artist collection.**
