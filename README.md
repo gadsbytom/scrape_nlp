@@ -13,7 +13,7 @@
 ---
 ### Resources:
 
-#### main_python.py:
+#### __main__.py:
 **This is the main entry point for the code**
 *This file should be run from the terminal. This file will call all the other files in the collection
 **Input: None**
