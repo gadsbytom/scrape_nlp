@@ -59,7 +59,7 @@ def grab_artist_lyrics(artist_links, artist_names, banner):
         if not os.path.exists(f'songs/{artist_names[i]}'):
             os.makedirs(f'songs/{artist_names[i]}')
         base_url = 'http://www.metrolyrics.com/'
-        regex = r'https:\/\/www\.metrolyrics\.com\/(\S+)'
+        regex = r'http:\/\/www\.metrolyrics\.com\/(\S+)'
         song_urls = []
         song_names = []
         all_songs_bs4 = soup(artist_link.text, 'html.parser')
@@ -67,16 +67,18 @@ def grab_artist_lyrics(artist_links, artist_names, banner):
         song_links = results.find_all('a')
 
         for j, link in enumerate(song_links):
-            song_url = link.get('href')
-            song_urls.append(song_url)
+            try:
+                song_url = link.get('href')
+                song_urls.append(song_url)
+                song_name = re.findall(regex, song_url)[0]
+                song_name = song_name.split('-')
+                song_name = '_'.join(song_name)
+                song_name = song_name[:-5]
+                song_names.append(song_name)
+            except:
+                continue
 
-            song_name = re.findall(regex, song_url)[0]
-            song_name = song_name.split('-')
-            song_name = '_'.join(song_name)
-            song_name = song_name[:-5]
-            song_names.append(song_name)
-
-        #for each song url, pull out all the text and save it in a txt file
+        #for each song url, pull out all the text and save it in a txt file        
         for k in tqdm(range(len(song_urls)), ascii=True, desc=f"saving {artist_names[i]}'s files"):
             try:
                 page = requests.get(song_urls[k])

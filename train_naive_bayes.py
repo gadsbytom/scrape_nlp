@@ -19,18 +19,21 @@ def train_my_nb(X,y):
 
 def rebalance_my_datasets(X,y):
     """bootstrap all minority classes with less than 4 data points up to 6, else SMOTE doesn't work"""
-    values, counts = np.unique(y, return_counts=True)
-    small_classes = [x[0] for x in list(zip(values, counts)) if x[1] <4]
-    extra_x = [X]
-    extra_y = [y]
-    for c in small_classes:
-        upsample_index = np.where(y==c)[0]
-        extra_x.append(X[upsample_index])
-        extra_y.append(y[upsample_index])
+    #only resample for n_classes > 1
+    if len(set(y)) > 1:
+        values, counts = np.unique(y, return_counts=True)
+        small_classes = [x[0] for x in list(zip(values, counts)) if x[1] <4]
+        extra_x = [X]
+        extra_y = [y]
+        for c in small_classes:
+            upsample_index = np.where(y==c)[0]
+            extra_x.append(X[upsample_index])
+            extra_y.append(y[upsample_index])
 
-    extra_x = tuple([x.todense() for x in extra_x])
-    X = np.concatenate(extra_x, axis=0)
-    y = np.concatenate(extra_y,axis=0)
-    sm = SMOTE(sampling_strategy='auto')
-    X, y = sm.fit_resample(X, y)
-    return X,y
+        extra_x = tuple([x.todense() for x in extra_x])
+        X = np.concatenate(extra_x, axis=0)
+        y = np.concatenate(extra_y,axis=0)
+        sm = SMOTE(sampling_strategy='auto')
+        return sm.fit_resample(X, y)
+    else:
+        return X,y
