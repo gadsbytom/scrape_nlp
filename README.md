@@ -1,7 +1,7 @@
 ## Scrape and Predict Song Lyrics:
 ---
 ### Description:
-#### This is a web scraping and NLP project. The purpose of the code is as follows:
+#### Web scraping and NLP project. The purpose of the code is as follows:
 
 * For a given list of artists, scrape the lyrics from their songs from the internet using Beautiful soup.
 
